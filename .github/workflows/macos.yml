@@ -5,7 +5,7 @@ on:
 
 jobs:
   build:
-    runs-on: macos-14 # Это облачный Mac на базе чипа Apple M1
+    runs-on: macos-14
     steps:
       - name: Скачиваем код
         uses: actions/checkout@v4
@@ -27,7 +27,8 @@ jobs:
       - name: Упаковываем готовое приложение
         run: |
           cd build/macos/Build/Products/Release
-          zip -r BloomeeTunes-macOS.zip BloomeeTunes.app
+          ls -la
+          zip -r -y BloomeeTunes-macOS.zip *.app
 
       - name: Выгружаем файл для скачивания
         uses: actions/upload-artifact@v4
