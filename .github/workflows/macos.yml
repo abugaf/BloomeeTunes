@@ -1,0 +1,36 @@
+name: Build macOS
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-14 # Это облачный Mac на базе чипа Apple M1
+    steps:
+      - name: Скачиваем код
+        uses: actions/checkout@v4
+
+      - name: Ставим Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Ставим Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+
+      - name: Собираем BloomeeTunes под macOS
+        run: |
+          flutter config --enable-macos-desktop
+          flutter pub get
+          flutter build macos --release
+
+      - name: Упаковываем готовое приложение
+        run: |
+          cd build/macos/Build/Products/Release
+          zip -r BloomeeTunes-macOS.zip BloomeeTunes.app
+
+      - name: Выгружаем файл для скачивания
+        uses: actions/upload-artifact@v4
+        with:
+          name: BloomeeTunes-macOS
+          path: build/macos/Build/Products/Release/BloomeeTunes-macOS.zip
